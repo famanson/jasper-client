@@ -27,6 +27,7 @@ def handle(text, mic, profile):
             mic.say("Activating %s." % target)
             mac = os_config[target]["mac"]
             wol.send_magic_packet(mac)
+            mic.say("Magic packet sent to %s host" % target)
         else:
             #target not recognised
             mic.say("I'm sorry. Target operating system %s is not recognised." % target)
