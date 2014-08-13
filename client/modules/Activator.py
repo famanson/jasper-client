@@ -39,7 +39,6 @@ def handle(text, mic, profile):
             if target == "windows":
                 return
             else:
-                passwd = os_config[target]["passwd"]
                 host = os_config[target]["host"]
                 out = call(["ssh", "pi@%s" % host, "sudo", "poweroff"])
                 if out == 0:
