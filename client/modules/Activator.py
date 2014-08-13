@@ -3,7 +3,7 @@ from subprocess import call
 import re
 
 
-WORDS = ["ACTIVATE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
+WORDS = ["ACTIVATE", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
 
 
 def handle(text, mic, profile):
@@ -34,8 +34,8 @@ def handle(text, mic, profile):
             mac = os_config[target]["mac"]
             wol.send_magic_packet(mac)
             mic.say("Magic packet sent to %s host" % target)
-        elif action == "deactivate":
-            mic.say("Deactivating %s." % target)
+        elif action == "close":
+            mic.say("Closing %s." % target)
             if target == "windows":
                 return
             else:
@@ -43,7 +43,7 @@ def handle(text, mic, profile):
                 host = os_config[target]["host"]
                 out = call(["ssh", "pi@%s" % host, "sudo", "poweroff"])
                 if out == 0:
-                    mic.say("%s deactivated successfully!" % target)
+                    mic.say("%s closed successfully!" % target)
 
     else:
         mic.say("I'm sorry I did not catch your last command. Please try again.")
@@ -56,4 +56,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return bool(re.search(r"\b((de)?activate\ (ubuntu|fedora|windows))\b", text, re.IGNORECASE))
+    return bool(re.search(r"\b((close|activate)\ (ubuntu|fedora|windows))\b", text, re.IGNORECASE))
