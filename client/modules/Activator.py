@@ -56,4 +56,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return bool(re.search(r"\b(activate\ (ubuntu|fedora|windows))\b", text, re.IGNORECASE))
+    return bool(re.search(r"\b((de)?activate\ (ubuntu|fedora|windows))\b", text, re.IGNORECASE))
