@@ -16,15 +16,16 @@ def handle(text, mic, profile):
         profile -- contains information related to the user (e.g., phone number)
     """
 
+    text = text.lower()
     ## Try to work out which OS to wake up
     match = re.search(r'activate\ (?P<target>\ubuntu|fedora|linux|windows)', text)
     if match:
         ## tempted to just use 'os' here but it is a package name, meh
-        target = match.group('target')
-        os_config = profile["ACTIVATOR"]
+        target = match.group("target")
+        os_config = profile["activator"]
         if target in os_config:
             mic.say("Activating %s." % target)
-            mac = os_config[target]['mac']
+            mac = os_config[target]["mac"]
             wol.send_magic_packet(mac)
         else:
             #target not recognised
