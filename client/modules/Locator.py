@@ -13,12 +13,10 @@ def handle(text, mic, profile):
         mic -- used to interact with the user (for both input and output)
         profile -- contains information related to the user (e.g., phone number)
     """
-    ipadd = commands.getoutput("/sbin/ifconfig").split("\n")[1].split()[1][5:].split(".")
+    ipadd = commands.getoutput("/sbin/ifconfig").split("\n")[1].split()[1][5:]
     mic.say("I am located at")
-    for add in ipadd:
-        for c in list(add):
-            mic.say(c)
-        mic.say("dot")
+    for c in list(ipadd):
+        mic.say(c)
 
 
 def isValid(text):
