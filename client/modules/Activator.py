@@ -38,10 +38,8 @@ def handle(text, mic, profile):
             if target == "windows":
                 return
             else:
-                passwd = os_config[target]["passwd"]
                 host = os_config[target]["host"]
                 commands.getoutput("ssh pi@%s sudo poweroff" % host)
-
     else:
         mic.say("I'm sorry I did not catch your last command. Please try again.")
 
