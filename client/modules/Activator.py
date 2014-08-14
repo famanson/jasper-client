@@ -1,5 +1,5 @@
 from awake import wol
-import command
+import commands
 import re
 
 
