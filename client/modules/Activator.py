@@ -1,5 +1,5 @@
 from awake import wol
-from subprocess import call
+import command
 import re
 
 
@@ -33,16 +33,14 @@ def handle(text, mic, profile):
             mic.say("Activating %s." % target)
             mac = os_config[target]["mac"]
             wol.send_magic_packet(mac)
-            mic.say("Magic packet sent to %s host" % target)
         elif action == "close":
             mic.say("Closing %s." % target)
             if target == "windows":
                 return
             else:
+                passwd = os_config[target]["passwd"]
                 host = os_config[target]["host"]
-                out = call(["ssh", "pi@%s" % host, "sudo", "poweroff"])
-                if out == 0:
-                    mic.say("%s closed successfully!" % target)
+                commands.getoutput("ssh pi@%s sudo poweroff" % host)
 
     else:
         mic.say("I'm sorry I did not catch your last command. Please try again.")
