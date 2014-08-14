@@ -2,7 +2,7 @@ from awake import wol
 import commands
 import re
 
-WORDS = ["WHERE", "ARE", "YOU"]
+WORDS = ["NETWORK", "ADDRESS"]
 
 def handle(text, mic, profile):
     """
@@ -13,12 +13,17 @@ def handle(text, mic, profile):
         mic -- used to interact with the user (for both input and output)
         profile -- contains information related to the user (e.g., phone number)
     """
-    ipadd = commands.getoutput("/sbin/ifconfig").split("\n")[1].split()[1][5:]
-    mic.say("I am located at %s" % ipadd)
+    ipadd = commands.getoutput("/sbin/ifconfig").split("\n")[1].split()[1][5:].split(".")
+    mic.say("I am located at")
+    for add in ipadd:
+        for c in list(add):
+            mic.say(c)
+        mic.say("dot")
+
 
 def isValid(text):
     """
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return bool(re.search(r"\bwhere\ are\ you\b", text, re.IGNORECASE))
+    return bool(re.search(r"\b(network)?address\b", text, re.IGNORECASE))
