@@ -13,11 +13,14 @@ def read(ser):
     while count < 50:
         data = ser.read(256).__repr__()
         if data and len(data) > 2:
-            return str(data[:-5])
+            return str(data)
         else:
-            print "Looping."
+            print "Waiting for data from Serial..."
         count = count + 1
     return None
+
+def write(ser, data):
+    ser.write(data)
 
 def handle(text, mic, profile):
     """
@@ -44,11 +47,10 @@ def handle(text, mic, profile):
                 mic.say("I'm sorry. Target operating system %s is not recognised." % target)
                 return # break
         if action == "activate":
-
             try:
                 if target == "check":
                     ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
-                    ser.write("check")
+                    write(ser, "check")
                     mic.say("Activation checking!")
                 else:
                     mic.say("Activating %s." % target)
@@ -60,18 +62,20 @@ def handle(text, mic, profile):
                     ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
 
                     # Send the activate command
-                    ser.write(target)
+                    write(ser, target)
                     ack1 = read(ser)
                     if not ack1 or ACK1 not in ack1:
                         print ack1
-                        mic.say("Acknowledge signal 2 was not received")
+                        mic.say("Acknowledge signal 1 was not received")
                         raise ValueError
                     # Got ack2
                     mic.say("Activation completed!")
             except:
+                print "Unexpected error:", sys.exc_info()[0]
                 mic.say("Error found. Activation failed!")
             finally:
                 if ser:
+                    print "Closing Serial connection"
                     ser.close()
 
         elif action == "close":
