@@ -1,10 +1,25 @@
 from awake import wol
 import commands
 import re
+import serial
+import time
 
 
 WORDS = ["ACTIVATE", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
+EMPTY_DATA_SIZE = 2 # a magic number
+ACK1 = "ACK1"
+ACK2 = "ACK2"
 
+def read(ser):
+    count = 0
+    while count < 50:
+        data = ser.read(256).__repr__()
+        if data and len(data) > 2:
+            return str(data[:-5])
+        else:
+            print "Looping."
+        count = count + 1
+    return None
 
 def handle(text, mic, profile):
     """
@@ -33,6 +48,33 @@ def handle(text, mic, profile):
             mic.say("Activating %s." % target)
             mac = os_config[target]["mac"]
             wol.send_magic_packet(mac)
+
+            # Now sleep for 20 seconds to wait for grub to show up
+            time.sleep(20)
+            ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=1)
+            try:
+                # Send the activate command
+                ser.write("activate")
+                # Receive ACK1
+                ack1 = read(ser)
+                if not ack1 or ack1 != ACK1:
+                    print ack1
+                    mic.say("Acknowledge signal 1 was not received")
+                    raise ValueError
+                # Got ACK1 here, send target system
+                ser.write(target)
+                ack2 = read(ser)
+                if not ack2 or ack2 != ACK2:
+                    print ack2
+                    mic.say("Acknowledge signal 2 was not received")
+                    raise ValueError
+                # Got ack2
+                mic.say("Activation completed!")
+            except:
+                mic.say("Error found. Activation failed!")
+            finally:
+                ser.close()
+
         elif action == "close":
             mic.say("Closing %s." % target)
             if target == "windows":

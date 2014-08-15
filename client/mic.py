@@ -143,6 +143,8 @@ class Mic:
         # no use continuing if no flag raised
         if not didDetect:
             print "No disturbance detected"
+            stream.stop_stream()
+            stream.close()
             return
 
         # cutoff any recording before this disturbance was detected
@@ -180,7 +182,7 @@ class Mic:
         """
 
         AUDIO_FILE = "active.wav"
-        RATE = 16000 
+        RATE = 16000
         CHUNK = 1024
         LISTEN_TIME = 12
 
