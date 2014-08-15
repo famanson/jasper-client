@@ -3,11 +3,13 @@ import commands
 import re
 import serial
 import time
-import sys
+import traceback
 
 
 WORDS = ["ACTIVATE", "CHECK", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
 EMPTY_DATA_SIZE = 2 # a magic number
+ACK1 = "ACK1"
+
 
 def read(ser):
     count = 0
@@ -73,7 +75,7 @@ def handle(text, mic, profile):
                     # Got ack2
                     mic.say("Activation completed!")
             except:
-                print "Unexpected error:", sys.exc_info()[0]
+                traceback.print_exc()
                 mic.say("Error found. Activation failed!")
             finally:
                 if ser:
