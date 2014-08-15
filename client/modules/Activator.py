@@ -39,9 +39,10 @@ def handle(text, mic, profile):
         action = match.group("action")
         os_config = profile["activator"]
         if target not in os_config:
-            #target not recognised
-            mic.say("I'm sorry. Target operating system %s is not recognised." % target)
-            return # break
+            if target != "reset"
+                #target not recognised
+                mic.say("I'm sorry. Target operating system %s is not recognised." % target)
+                return # break
         if action == "activate":
             ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=1)
             try:
