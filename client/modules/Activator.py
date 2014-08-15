@@ -5,7 +5,7 @@ import serial
 import time
 
 
-WORDS = ["ACTIVATE", "TEST", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
+WORDS = ["ACTIVATE", "CHECK", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
 EMPTY_DATA_SIZE = 2 # a magic number
 
 def read(ser):
@@ -39,17 +39,17 @@ def handle(text, mic, profile):
         action = match.group("action")
         os_config = profile["activator"]
         if target not in os_config:
-            if target != "test":
+            if target != "check":
                 #target not recognised
                 mic.say("I'm sorry. Target operating system %s is not recognised." % target)
                 return # break
         if action == "activate":
 
             try:
-                if target == "test":
+                if target == "check":
                     ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
-                    ser.write("test")
-                    mic.say("Activation test!")
+                    ser.write("check")
+                    mic.say("Activation checking!")
                 else:
                     mic.say("Activating %s." % target)
                     mac = os_config[target]["mac"]
@@ -92,4 +92,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return bool(re.search(r"\b((close|activate)\ (test|ubuntu|fedora|windows))\b", text, re.IGNORECASE))
+    return bool(re.search(r"\b((close|activate)\ (check|ubuntu|fedora|windows))\b", text, re.IGNORECASE))
