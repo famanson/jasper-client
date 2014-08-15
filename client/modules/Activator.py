@@ -5,7 +5,7 @@ import serial
 import time
 
 
-WORDS = ["ACTIVATE", "test", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
+WORDS = ["ACTIVATE", "TEST", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
 EMPTY_DATA_SIZE = 2 # a magic number
 
 def read(ser):
