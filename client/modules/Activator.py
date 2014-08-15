@@ -5,10 +5,8 @@ import serial
 import time
 
 
-WORDS = ["ACTIVATE", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
+WORDS = ["ACTIVATE", "RESET", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
 EMPTY_DATA_SIZE = 2 # a magic number
-ACK1 = "ACK1"
-ACK2 = "ACK2"
 
 def read(ser):
     count = 0
@@ -45,26 +43,31 @@ def handle(text, mic, profile):
             mic.say("I'm sorry. Target operating system %s is not recognised." % target)
             return # break
         if action == "activate":
-            mic.say("Activating %s." % target)
-            mac = os_config[target]["mac"]
-            wol.send_magic_packet(mac)
-
-            # Now sleep for 20 seconds to wait for grub to show up
-            time.sleep(20)
             ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=1)
             try:
+            if target == "reset":
+                ser.write("reset")
+                mic.say("Activation reset!")
+            else:
+                mic.say("Activating %s." % target)
+                mac = os_config[target]["mac"]
+                wol.send_magic_packet(mac)
+
+                # Now sleep for 20 seconds to wait for grub to show up
+                time.sleep(20)
+
                 # Send the activate command
                 ser.write("activate")
                 # Receive ACK1
                 ack1 = read(ser)
-                if not ack1 or ack1 != ACK1:
+                if not ack1 or ACK1 not in ack1:
                     print ack1
                     mic.say("Acknowledge signal 1 was not received")
                     raise ValueError
                 # Got ACK1 here, send target system
                 ser.write(target)
                 ack2 = read(ser)
-                if not ack2 or ack2 != ACK2:
+                if not ack2 or ACK2 not in ack2:
                     print ack2
                     mic.say("Acknowledge signal 2 was not received")
                     raise ValueError
@@ -93,4 +96,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return bool(re.search(r"\b((close|activate)\ (ubuntu|fedora|windows))\b", text, re.IGNORECASE))
+    return bool(re.search(r"\b((close|activate)\ (reset|ubuntu|fedora|windows))\b", text, re.IGNORECASE))
