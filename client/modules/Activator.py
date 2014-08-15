@@ -39,41 +39,41 @@ def handle(text, mic, profile):
         action = match.group("action")
         os_config = profile["activator"]
         if target not in os_config:
-            if target != "reset"
+            if target != "reset":
                 #target not recognised
                 mic.say("I'm sorry. Target operating system %s is not recognised." % target)
                 return # break
         if action == "activate":
             ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=1)
             try:
-            if target == "reset":
-                ser.write("reset")
-                mic.say("Activation reset!")
-            else:
-                mic.say("Activating %s." % target)
-                mac = os_config[target]["mac"]
-                wol.send_magic_packet(mac)
+                if target == "reset":
+                    ser.write("reset")
+                    mic.say("Activation reset!")
+                else:
+                    mic.say("Activating %s." % target)
+                    mac = os_config[target]["mac"]
+                    wol.send_magic_packet(mac)
 
-                # Now sleep for 20 seconds to wait for grub to show up
-                time.sleep(20)
+                    # Now sleep for 20 seconds to wait for grub to show up
+                    time.sleep(20)
 
-                # Send the activate command
-                ser.write("activate")
-                # Receive ACK1
-                ack1 = read(ser)
-                if not ack1 or ACK1 not in ack1:
-                    print ack1
-                    mic.say("Acknowledge signal 1 was not received")
-                    raise ValueError
-                # Got ACK1 here, send target system
-                ser.write(target)
-                ack2 = read(ser)
-                if not ack2 or ACK2 not in ack2:
-                    print ack2
-                    mic.say("Acknowledge signal 2 was not received")
-                    raise ValueError
-                # Got ack2
-                mic.say("Activation completed!")
+                    # Send the activate command
+                    ser.write("activate")
+                    # Receive ACK1
+                    ack1 = read(ser)
+                    if not ack1 or ACK1 not in ack1:
+                        print ack1
+                        mic.say("Acknowledge signal 1 was not received")
+                        raise ValueError
+                    # Got ACK1 here, send target system
+                    ser.write(target)
+                    ack2 = read(ser)
+                    if not ack2 or ACK2 not in ack2:
+                        print ack2
+                        mic.say("Acknowledge signal 2 was not received")
+                        raise ValueError
+                    # Got ack2
+                    mic.say("Activation completed!")
             except:
                 mic.say("Error found. Activation failed!")
             finally:
