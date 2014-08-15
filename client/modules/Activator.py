@@ -44,9 +44,10 @@ def handle(text, mic, profile):
                 mic.say("I'm sorry. Target operating system %s is not recognised." % target)
                 return # break
         if action == "activate":
-            ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=1)
+
             try:
                 if target == "reset":
+                    ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=1)
                     ser.write("reset")
                     mic.say("Activation reset!")
                 else:
@@ -56,6 +57,7 @@ def handle(text, mic, profile):
 
                     # Now sleep for 20 seconds to wait for grub to show up
                     time.sleep(20)
+                    ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=1)
 
                     # Send the activate command
                     ser.write("activate")
@@ -77,7 +79,8 @@ def handle(text, mic, profile):
             except:
                 mic.say("Error found. Activation failed!")
             finally:
-                ser.close()
+                if ser:
+                    ser.close()
 
         elif action == "close":
             mic.say("Closing %s." % target)
