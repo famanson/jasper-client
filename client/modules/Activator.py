@@ -5,7 +5,7 @@ import serial
 import time
 
 
-WORDS = ["ACTIVATE", "RESET", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
+WORDS = ["ACTIVATE", "test", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
 EMPTY_DATA_SIZE = 2 # a magic number
 
 def read(ser):
@@ -92,4 +92,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return bool(re.search(r"\b((close|activate)\ (reset|ubuntu|fedora|windows))\b", text, re.IGNORECASE))
+    return bool(re.search(r"\b((close|activate)\ (test|ubuntu|fedora|windows))\b", text, re.IGNORECASE))
