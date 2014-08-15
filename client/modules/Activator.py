@@ -3,6 +3,7 @@ import commands
 import re
 import serial
 import time
+import sys
 
 
 WORDS = ["ACTIVATE", "CHECK", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
@@ -48,6 +49,7 @@ def handle(text, mic, profile):
                 return # break
         if action == "activate":
             try:
+
                 if target == "check":
                     ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
                     write(ser, "check")
