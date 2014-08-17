@@ -48,7 +48,7 @@ def handle(text, mic, profile):
         if target not in os_config:
             if target != "check" and target != "tunnel":
                 #target not recognised
-                mic.say("I\"m sorry. Target operating system %s is not recognised." % target)
+                mic.say("I'm sorry. Target operating system %s is not recognised." % target)
                 return # break
         if action == "activate":
             try:
