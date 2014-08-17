@@ -61,7 +61,7 @@ def handle(text, mic, profile):
                     write(ser, "tunnel")
                     mic.say("Activating tunnel")
                     rnd_suffix = str(randint(1000,9999))
-                    subprocess.Popen(["node", "/usr/local/bin/lt", "--port", "80", "--subdomain", "famanson%s &" % rnd_suffix, "&"])
+                    subprocess.Popen(["node", "/usr/local/bin/lt", "--port", "80", "--subdomain", "famanson%s" % rnd_suffix, "&"])
                     mic.say("Your suffix is %s" % rnd_suffix)
                 else:
                     mic.say("Activating %s." % target)
