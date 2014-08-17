@@ -46,18 +46,18 @@ def handle(text, mic, profile):
         action = match.group("action")
         os_config = profile["activator"]
         if target not in os_config:
-            if target != "check" and target != 'tunnel':
+            if target != "check" and target != "tunnel":
                 #target not recognised
-                mic.say("I'm sorry. Target operating system %s is not recognised." % target)
+                mic.say("I\"m sorry. Target operating system %s is not recognised." % target)
                 return # break
         if action == "activate":
             try:
                 if target == "check":
-                    ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
+                    ser = serial.Serial("/dev/ttyUSB0", 38400, timeout=2)
                     write(ser, "check")
                     mic.say("Activation checking!")
                 elif target == "tunnel":
-                    ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
+                    ser = serial.Serial("/dev/ttyUSB0", 38400, timeout=2)
                     write(ser, "tunnel")
                     mic.say("Activating tunnel")
                     rnd_suffix = str(randint(1000,9999))
@@ -66,11 +66,14 @@ def handle(text, mic, profile):
                 else:
                     mic.say("Activating %s." % target)
                     mac = os_config[target]["mac"]
-                    wol.send_magic_packet(mac)
+                    dest=None
+                    if "dest" in os_config[target]:
+                        dest = os_config[target]["dest"]
+                    wol.send_magic_packet(mac, dest=dest)
 
                     # Now sleep for 20 seconds to wait for grub to show up
                     time.sleep(20)
-                    ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
+                    ser = serial.Serial("/dev/ttyUSB0", 38400, timeout=2)
 
                     # Send the activate command
                     write(ser, target)
@@ -97,7 +100,7 @@ def handle(text, mic, profile):
                 host = os_config[target]["host"]
                 subprocess.Popen(["ssh", "pi@%s" % host, "sudo", "poweroff"])
     else:
-        mic.say("I'm sorry I did not catch your last command. Please try again.")
+        mic.say("I"m sorry I did not catch your last command. Please try again.")
 
 
 def isValid(text):
