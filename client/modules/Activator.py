@@ -4,9 +4,10 @@ import re
 import serial
 import time
 import traceback
+from random import randint
 
 
-WORDS = ["ACTIVATE", "CHECK", "CLOSE", "COMPUTER", "UBUNTU", "WINDOWS", "FEDORA"]
+WORDS = ["ACTIVATE", "CHECK", "CLOSE", "TUNNEL", "UBUNTU", "WINDOWS", "FEDORA"]
 EMPTY_DATA_SIZE = 2 # a magic number
 ACK1 = "ACK1"
 
@@ -51,11 +52,19 @@ def handle(text, mic, profile):
                 return # break
         if action == "activate":
             try:
-
                 if target == "check":
                     ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
                     write(ser, "check")
                     mic.say("Activation checking!")
+                elif target == "tunnel":
+                    ser = serial.Serial('/dev/ttyUSB0', 38400, timeout=2)
+                    write(ser, "tunnel")
+                    mic.say("Activating tunnel")
+                    rnd_suffix = str(randint(1000,9999))
+                    commands.getoutput("lt --port 80 --subdomain %s" % rnd_suffix)
+                    mic.say("Your suffix is")
+                    for c in list(rnd_suffix):
+                        mic.say(rnd_suffix)
                 else:
                     mic.say("Activating %s." % target)
                     mac = os_config[target]["mac"]
@@ -100,4 +109,4 @@ def isValid(text):
         Arguments:
         text -- user-input, typically transcribed speech
     """
-    return bool(re.search(r"\b((close|activate)\ (check|ubuntu|fedora|windows))\b", text, re.IGNORECASE))
+    return bool(re.search(r"\b((close|activate)\ (check|tunnel|ubuntu|fedora|windows))\b", text, re.IGNORECASE))
