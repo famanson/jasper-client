@@ -100,7 +100,7 @@ def handle(text, mic, profile):
                 host = os_config[target]["host"]
                 subprocess.Popen(["ssh", "pi@%s" % host, "sudo", "poweroff"])
     else:
-        mic.say("I"m sorry I did not catch your last command. Please try again.")
+        mic.say("I'm sorry I did not catch your last command. Please try again.")
 
 
 def isValid(text):
