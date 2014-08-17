@@ -66,9 +66,9 @@ def handle(text, mic, profile):
                 else:
                     mic.say("Activating %s." % target)
                     mac = os_config[target]["mac"]
-                    dest=None
-                    if "dest" in os_config[target]:
-                        dest = os_config[target]["dest"]
+                    dest = None
+                    if "host" in os_config[target]:
+                        dest = os_config[target]["host"]
                     wol.send_magic_packet(mac, dest=dest)
 
                     # Now sleep for 20 seconds to wait for grub to show up
