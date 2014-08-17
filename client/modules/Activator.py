@@ -46,7 +46,7 @@ def handle(text, mic, profile):
         action = match.group("action")
         os_config = profile["activator"]
         if target not in os_config:
-            if target != "check":
+            if target != "check" and target != 'tunnel':
                 #target not recognised
                 mic.say("I'm sorry. Target operating system %s is not recognised." % target)
                 return # break
