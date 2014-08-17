@@ -1,5 +1,5 @@
 from awake import wol
-import commands
+import subprocess
 import re
 import serial
 import time
@@ -61,7 +61,7 @@ def handle(text, mic, profile):
                     write(ser, "tunnel")
                     mic.say("Activating tunnel")
                     rnd_suffix = str(randint(1000,9999))
-                    commands.getoutput("node /usr/local/bin/lt --port 80 --subdomain famanson%s &" % rnd_suffix)
+                    subprocess.Popen(["node", "/usr/local/bin/lt", "--port", "80", "--subdomain", "famanson%s &" % rnd_suffix, "&"])
                     mic.say("Your suffix is %s" % rnd_suffix)
                 else:
                     mic.say("Activating %s." % target)
@@ -95,7 +95,7 @@ def handle(text, mic, profile):
                 return
             else:
                 host = os_config[target]["host"]
-                commands.getoutput("ssh pi@%s sudo poweroff" % host)
+                subprocess.Popen(["ssh", "pi@%s" % host, "sudo", "poweroff"])
     else:
         mic.say("I'm sorry I did not catch your last command. Please try again.")
 
